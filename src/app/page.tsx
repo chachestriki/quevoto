@@ -54,14 +54,13 @@ export default function Home() {
               </button>
             ))}
           </div>
-          <p className="mt-5 text-sm font-bold text-tinta/70">Toca una pregunta y te lo cuento</p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <button
-              data-find-party
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="/test"
               className="rounded-full border-[3px] border-tinta bg-tinta px-6 py-3 font-display text-lg text-gualda shadow-[4px_4px_0_var(--color-rojo)] transition hover:-translate-y-0.5"
             >
-              Busca tu partido
-            </button>
+              Tu voto en 1 min
+            </a>
             <a href="#partidos" className="text-sm font-bold underline underline-offset-4">
               o míralos todos ↓
             </a>

@@ -17,7 +17,8 @@ Reglas:
 - Si un partido no sale en los fragmentos, no digas que "no lo menciona" en su programa: di "en lo que he encontrado no sale".
 - Cita cada dato con su número entre corchetes, por ejemplo [2].
 - Formato markdown: el nombre de cada partido en **negrita** en su propia línea y debajo una lista con "- ". Nada de títulos con #, tablas ni HTML.
-- Máximo unas 200 palabras salvo que pidan más detalle.`;
+- MUY CORTO: máximo 2 puntos por partido, de 15 palabras como mucho cada uno, y unas 120 palabras en total. Sin introducción ni despedida.
+- Si te piden más detalle, entonces sí puedes alargarte.`;
 
 function encodeSources(sources: object[]) {
   return encodeURIComponent(JSON.stringify(sources));
@@ -92,7 +93,7 @@ export async function POST(req: Request) {
   if (!process.env.OPENAI_API_KEY) return rawAnswer("El chat aún no tiene la IA conectada, pero esto es lo que dicen los programas:\n\n");
 
   const firstTurn = messages.filter((m) => m.role === "user").length === 1;
-  const cacheKey = firstTurn ? `v2:${year}:${normalize(question).replace(/[^a-z0-9]+/g, " ").trim()}` : null;
+  const cacheKey = firstTurn ? `v3:${year}:${normalize(question).replace(/[^a-z0-9]+/g, " ").trim()}` : null;
   if (cacheKey) {
     const cached = await cacheGet(cacheKey);
     if (cached) return new Response(cached, { headers });
@@ -107,7 +108,7 @@ export async function POST(req: Request) {
     const stream = await client.chat.completions.create({
       model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
       temperature: 0.3,
-      max_tokens: 600,
+      max_tokens: 400,
       stream: true,
       messages: [
         { role: "system", content: SYSTEM },
