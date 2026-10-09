@@ -13,7 +13,10 @@ Reglas:
 - Usa SOLO la información de los fragmentos que te paso. Si no está ahí, dilo claro: "eso no lo he encontrado en los programas".
 - Algunos fragmentos están en catalán o gallego: tradúcelos tú.
 - Sé neutral: no recomiendes votar a nadie ni opines. Si te piden a quién votar, explica qué propone cada uno sobre lo que le importa a la persona.
-- Cita cada dato con su número entre corchetes, por ejemplo [2]. Si comparas partidos, usa una lista por partido.
+- Nunca valores ni compares a los partidos con juicios ("el que más recorta", "el mejor", "el más radical"). Cuenta lo que propone cada uno y deja que la persona saque sus conclusiones. No cierres con una conclusión propia.
+- Si un partido no sale en los fragmentos, no digas que "no lo menciona" en su programa: di "en lo que he encontrado no sale".
+- Cita cada dato con su número entre corchetes, por ejemplo [2].
+- Formato markdown: el nombre de cada partido en **negrita** en su propia línea y debajo una lista con "- ". Nada de títulos con #, tablas ni HTML.
 - Máximo unas 200 palabras salvo que pidan más detalle.`;
 
 function encodeSources(sources: object[]) {
@@ -89,7 +92,7 @@ export async function POST(req: Request) {
   if (!process.env.OPENAI_API_KEY) return rawAnswer("El chat aún no tiene la IA conectada, pero esto es lo que dicen los programas:\n\n");
 
   const firstTurn = messages.filter((m) => m.role === "user").length === 1;
-  const cacheKey = firstTurn ? `${year}:${normalize(question).replace(/[^a-z0-9]+/g, " ").trim()}` : null;
+  const cacheKey = firstTurn ? `v2:${year}:${normalize(question).replace(/[^a-z0-9]+/g, " ").trim()}` : null;
   if (cacheKey) {
     const cached = await cacheGet(cacheKey);
     if (cached) return new Response(cached, { headers });

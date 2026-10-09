@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Markdown from "react-markdown";
 
 type Source = { n: number; short: string; page: number; url: string | null };
 type Msg = { role: "user" | "assistant"; content: string; sources?: Source[] };
@@ -12,24 +13,44 @@ const SUGGESTIONS = [
   "¿Qué hay para los jóvenes?",
 ];
 
-function renderText(text: string, sources?: Source[]) {
-  return text.split(/(\[\d+\])/g).map((part, i) => {
-    const m = part.match(/^\[(\d+)\]$/);
-    const s = m && sources?.find((x) => x.n === Number(m[1]));
-    if (!s) return <span key={i}>{part}</span>;
-    return (
-      <a
-        key={i}
-        href={s.url ?? "#"}
-        target="_blank"
-        rel="noreferrer"
-        title={`${s.short}, pág. ${s.page}`}
-        className="mx-0.5 inline-block rounded-md bg-gualda px-1.5 text-xs font-bold text-tinta no-underline hover:bg-rojo hover:text-white"
-      >
-        {s.short} p.{s.page}
-      </a>
-    );
-  });
+function Answer({ text, sources }: { text: string; sources?: Source[] }) {
+  const md = text.replace(/\[(\d+)\]/g, (all, n) => (sources?.some((x) => x.n === Number(n)) ? `[${all}](#cita-${n})` : all));
+  return (
+    <Markdown
+      components={{
+        p: ({ children }) => <p className="my-1.5 first:mt-0 last:mb-0">{children}</p>,
+        ul: ({ children }) => <ul className="my-1.5 list-disc space-y-1 pl-5">{children}</ul>,
+        ol: ({ children }) => <ol className="my-1.5 list-decimal space-y-1 pl-5">{children}</ol>,
+        strong: ({ children }) => <strong className="font-black">{children}</strong>,
+        h1: ({ children }) => <p className="mt-3 font-display text-lg first:mt-0">{children}</p>,
+        h2: ({ children }) => <p className="mt-3 font-display text-lg first:mt-0">{children}</p>,
+        h3: ({ children }) => <p className="mt-3 font-black first:mt-0">{children}</p>,
+        a: ({ href, children }) => {
+          const n = href?.startsWith("#cita-") ? Number(href.slice(6)) : null;
+          const s = n !== null ? sources?.find((x) => x.n === n) : undefined;
+          if (!s)
+            return (
+              <a href={href} target="_blank" rel="noreferrer" className="font-bold underline">
+                {children}
+              </a>
+            );
+          return (
+            <a
+              href={s.url ?? "#"}
+              target="_blank"
+              rel="noreferrer"
+              title={`${s.short}, pág. ${s.page}`}
+              className="mx-0.5 inline-block rounded-md bg-gualda px-1.5 text-xs font-bold text-tinta no-underline hover:bg-rojo hover:text-white"
+            >
+              {s.short} p.{s.page}
+            </a>
+          );
+        },
+      }}
+    >
+      {md}
+    </Markdown>
+  );
 }
 
 export default function Chat() {
@@ -139,7 +160,7 @@ export default function Chat() {
               className={
                 m.role === "user"
                   ? "max-w-[85%] rounded-3xl rounded-br-md bg-rojo px-4 py-3 text-white"
-                  : "max-w-[90%] whitespace-pre-wrap rounded-3xl rounded-bl-md bg-crema px-4 py-3 leading-relaxed"
+                  : "max-w-[90%] rounded-3xl rounded-bl-md bg-crema px-4 py-3 leading-relaxed"
               }
             >
               {m.role === "assistant" && !m.content ? (
@@ -149,7 +170,7 @@ export default function Chat() {
                   <span className="h-2 w-2 animate-bounce rounded-full bg-tinta/50 [animation-delay:.3s]" />
                 </span>
               ) : m.role === "assistant" ? (
-                renderText(m.content, m.sources)
+                <Answer text={m.content} sources={m.sources} />
               ) : (
                 m.content
               )}
