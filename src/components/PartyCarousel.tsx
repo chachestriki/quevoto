@@ -41,7 +41,7 @@ export default function PartyCarousel() {
           return (
             <article
               key={p.slug}
-              className="relative flex h-full w-full shrink-0 snap-center flex-col justify-center overflow-hidden px-4 pb-28 pt-14 sm:px-10 sm:pb-24"
+              className="relative flex h-full w-full shrink-0 snap-center flex-col justify-center-safe overflow-x-hidden overflow-y-auto px-4 pb-28 pt-20 sm:px-10 sm:pb-24"
               style={{ background: `linear-gradient(160deg, ${p.color} 0%, ${p.color} 38%, var(--color-crema) 38%)` }}
             >
               <div className="mx-auto flex w-full max-w-3xl flex-col">
