@@ -22,8 +22,15 @@ export default function Home() {
         <Flag className="wave absolute right-[7%] top-[24%] hidden w-20 drop-shadow-md [animation-delay:1s] sm:block" />
 
         <nav className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-4 text-crema">
-          <span className="font-display text-xl">quevoto?</span>
-          <button data-find-party className="rounded-full border-2 border-crema/70 px-3 py-1.5 text-sm font-bold hover:bg-crema hover:text-rojo">Busca tu partido</button>
+          <span className="font-display text-lg sm:text-xl">quevoto?</span>
+          <div className="flex items-center gap-2">
+            <button data-find-party className="whitespace-nowrap rounded-full border-2 border-crema/70 px-3 py-1.5 text-xs font-bold hover:bg-crema hover:text-rojo sm:text-sm">
+              Busca tu partido
+            </button>
+            <a href="/test" className="whitespace-nowrap rounded-full border-2 border-crema bg-crema px-3 py-1.5 text-xs font-bold text-rojo hover:bg-gualda hover:text-tinta sm:text-sm">
+              Tu voto en 1 min
+            </a>
+          </div>
         </nav>
 
         <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-5 text-center">
@@ -47,19 +54,15 @@ export default function Home() {
               </button>
             ))}
           </div>
-          <p className="mt-5 text-sm font-bold text-tinta/70">Toca una pregunta y te lo cuento</p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <button
-              data-find-party
-              className="rounded-full border-[3px] border-tinta bg-tinta px-6 py-3 font-display text-lg text-gualda shadow-[4px_4px_0_var(--color-rojo)] transition hover:-translate-y-0.5"
-            >
-              Busca tu partido
-            </button>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <a
               href="/test"
-              className="rounded-full border-[3px] border-tinta bg-white px-5 py-3 font-display text-lg shadow-[4px_4px_0_var(--color-tinta)] transition hover:-translate-y-0.5"
+              className="rounded-full border-[3px] border-tinta bg-tinta px-6 py-3 font-display text-lg text-gualda shadow-[4px_4px_0_var(--color-rojo)] transition hover:-translate-y-0.5"
             >
-              ¿A quién te pareces?
+              Tu voto en 1 min
+            </a>
+            <a href="#partidos" className="text-sm font-bold underline underline-offset-4">
+              o míralos todos ↓
             </a>
           </div>
         </div>
