@@ -24,6 +24,17 @@ cp .env.example .env.local   # pon tu OPENAI_API_KEY
 npm run dev
 ```
 
+## Límites y seguridad
+
+Para que nadie te funda los créditos de OpenAI:
+
+- Límite por IP: `RATE_LIMIT_HOUR` (10) y `RATE_LIMIT_DAY` (30). Si se pasa, devuelve 429.
+- Tope global: `GLOBAL_DAILY_LIMIT` (2000) respuestas con IA al día. Al llegar al tope, el chat sigue funcionando, pero enseña los fragmentos sin IA.
+- Caché de 7 días para las primeras preguntas de cada conversación (los bocadillos y las sugerencias).
+- `max_tokens: 600`, preguntas de máximo 400 caracteres, rechazo de peticiones de otros orígenes y cabeceras de seguridad (CSP, HSTS, `X-Frame-Options`...).
+- Para que los límites se compartan entre instancias de Vercel, añade **Upstash Redis** desde Vercel → Storage, que rellena `UPSTASH_REDIS_REST_*`/`KV_REST_API_*`. Sin Redis, todo va en memoria por instancia.
+- Pon también un tope de gasto mensual en OpenAI (Settings → Limits).
+
 ## Despliegue
 
 Importa el repo en Vercel y añade `OPENAI_API_KEY` en las variables de entorno. `OPENAI_MODEL` es opcional.

@@ -170,7 +170,7 @@ export default function Chat() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Pregunta lo que quieras…"
           className="min-w-0 flex-1 rounded-full border-2 border-tinta bg-white px-5 py-3 text-base outline-none focus:ring-4 focus:ring-gualda"
-          maxLength={500}
+          maxLength={400}
         />
         <button
           disabled={loading || !input.trim()}
