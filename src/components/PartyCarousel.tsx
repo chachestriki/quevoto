@@ -102,11 +102,16 @@ export default function PartyCarousel() {
           onClick={() => go(active + 1)}
           disabled={active === parties.length - 1}
           aria-label="Siguiente"
-          className="pointer-events-auto hidden h-11 w-11 items-center justify-center rounded-full border-[3px] border-tinta bg-white text-xl font-black disabled:opacity-30 sm:flex"
+          className={`pointer-events-auto hidden h-11 w-11 items-center justify-center rounded-full border-[3px] border-tinta bg-white text-xl font-black disabled:opacity-30 sm:flex ${active === 0 ? "nudge" : ""}`}
         >
           →
         </button>
       </div>
+      {active === 0 && (
+        <p className="nudge pointer-events-none absolute bottom-7 left-4 rounded-full bg-tinta px-3 py-1.5 text-sm font-bold text-crema shadow-lg sm:hidden">
+          desliza →
+        </p>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { partyBySlug } from "@/data/parties";
-import { availableYears, detectParties, search } from "@/lib/search";
+import { cacheGet, cacheSet, checkUser, clientIp, takeGlobalAi } from "@/lib/ratelimit";
+import { availableYears, detectParties, normalize, search } from "@/lib/search";
 
 export const maxDuration = 60;
 
@@ -19,11 +20,30 @@ function encodeSources(sources: object[]) {
   return encodeURIComponent(JSON.stringify(sources));
 }
 
+const MAX_Q = 400;
+const plain = { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" };
+
 export async function POST(req: Request) {
+  const origin = req.headers.get("origin");
+  if (origin && new URL(origin).host !== req.headers.get("host")) {
+    return new Response("Origen no permitido.", { status: 403, headers: plain });
+  }
+  if (Number(req.headers.get("content-length") ?? 0) > 30_000) {
+    return new Response("Mensaje demasiado largo.", { status: 413, headers: plain });
+  }
   const body = (await req.json().catch(() => null)) as { messages?: Msg[]; year?: number } | null;
-  const messages = (body?.messages ?? []).filter((m) => m && typeof m.content === "string").slice(-8);
-  const question = [...messages].reverse().find((m) => m.role === "user")?.content?.slice(0, 1000);
-  if (!question) return Response.json({ error: "Falta la pregunta" }, { status: 400 });
+  const messages = (Array.isArray(body?.messages) ? body.messages : [])
+    .filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
+    .slice(-8);
+  const question = [...messages].reverse().find((m) => m.role === "user")?.content?.trim().slice(0, MAX_Q);
+  if (!question) return new Response("Falta la pregunta.", { status: 400, headers: plain });
+
+  if (!(await checkUser(clientIp(req)))) {
+    return new Response("Has hecho muchas preguntas seguidas. Vuelve en un rato y seguimos.", {
+      status: 429,
+      headers: { ...plain, "Retry-After": "3600" },
+    });
+  }
 
   const years = availableYears();
   const year = years.includes(Number(body?.year)) ? Number(body!.year) : years.at(-1)!;
@@ -56,15 +76,27 @@ export async function POST(req: Request) {
     .map((h, i) => `[${i + 1}] ${partyBySlug[h.party]?.short ?? h.party} · programa ${year} · pág. ${h.page}\n${h.text}`)
     .join("\n\n---\n\n");
 
-  if (!process.env.OPENAI_API_KEY) {
-    const text =
-      "El chat aún no tiene la IA conectada, pero esto es lo que dicen los programas:\n\n" +
+  const rawAnswer = (intro: string) =>
+    new Response(
+      intro +
       hits
         .slice(0, 5)
         .map((h, i) => `[${i + 1}] ${h.text.replace(/\s+/g, " ").slice(0, 280)}…`)
-        .join("\n\n");
-    return new Response(text, { headers });
+        .join("\n\n"),
+      { headers },
+    );
+
+  if (!process.env.OPENAI_API_KEY) return rawAnswer("El chat aún no tiene la IA conectada, pero esto es lo que dicen los programas:\n\n");
+
+  const firstTurn = messages.filter((m) => m.role === "user").length === 1;
+  const cacheKey = firstTurn ? `${year}:${normalize(question).replace(/[^a-z0-9]+/g, " ").trim()}` : null;
+  if (cacheKey) {
+    const cached = await cacheGet(cacheKey);
+    if (cached) return new Response(cached, { headers });
   }
+
+  if (!(await takeGlobalAi())) return rawAnswer("Hoy la IA ha currado mucho y está descansando. Te dejo lo que dicen los programas tal cual:\n\n");
+
 
   const client = new OpenAI();
   const history = messages.slice(0, -1).slice(-6);
@@ -72,6 +104,7 @@ export async function POST(req: Request) {
     const stream = await client.chat.completions.create({
       model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
       temperature: 0.3,
+      max_tokens: 600,
       stream: true,
       messages: [
         { role: "system", content: SYSTEM },
@@ -82,11 +115,16 @@ export async function POST(req: Request) {
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
+        let full = "";
         try {
           for await (const part of stream) {
             const delta = part.choices[0]?.delta?.content;
-            if (delta) controller.enqueue(encoder.encode(delta));
+            if (delta) {
+              full += delta;
+              controller.enqueue(encoder.encode(delta));
+            }
           }
+          if (cacheKey && full) await cacheSet(cacheKey, full);
         } catch {
           controller.enqueue(encoder.encode("\n\n(Se ha cortado la respuesta, vuelve a intentarlo.)"));
         }

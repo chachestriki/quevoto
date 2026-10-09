@@ -35,13 +35,15 @@ export default function Home() {
               <button
                 key={b.label}
                 data-ask-q={b.q}
-                className={`relative ${b.tilt} ${i > 2 ? "hidden sm:block" : ""} rounded-3xl border-[3px] border-tinta bg-white px-4 py-2.5 text-base font-bold shadow-[4px_4px_0_var(--color-tinta)] transition hover:-translate-y-1 hover:rotate-0 hover:bg-crema sm:text-lg`}
+                style={{ animationDelay: `${i * 0.4}s` }}
+                className={`pop relative ${b.tilt} ${i > 2 ? "hidden sm:block" : ""} rounded-3xl border-[3px] border-tinta bg-white px-4 py-2.5 text-base font-bold shadow-[4px_4px_0_var(--color-tinta)] transition hover:-translate-y-1 hover:rotate-0 hover:bg-crema sm:text-lg`}
               >
                 {b.label}
                 <span className="absolute -bottom-[11px] left-6 h-4 w-4 rotate-45 border-b-[3px] border-r-[3px] border-tinta bg-inherit" />
               </button>
             ))}
           </div>
+          <p className="mt-5 text-sm font-bold text-tinta/70">Toca una pregunta y te lo cuento</p>
         </div>
         <a href="#partidos" className="relative z-10 pb-5 text-center text-sm font-bold text-crema">Desliza ↓</a>
       </section>

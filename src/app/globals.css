@@ -28,3 +28,25 @@ body {
   animation: wave 4s ease-in-out infinite;
   transform-origin: left center;
 }
+
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
+}
+
+.nudge {
+  animation: nudge 1.2s ease-in-out infinite;
+}
+
+@keyframes pop {
+  0%, 100% { scale: 1; }
+  50% { scale: 1.05; }
+}
+
+.pop {
+  animation: pop 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave, .nudge, .pop { animation: none; }
+}
