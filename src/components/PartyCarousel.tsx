@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { parties } from "@/data/parties";
 
 export default function PartyCarousel() {
@@ -14,6 +14,19 @@ export default function PartyCarousel() {
     const n = Math.max(0, Math.min(parties.length - 1, i));
     el.scrollTo({ left: n * el.clientWidth, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    const onParty = (e: Event) => {
+      const i = parties.findIndex((p) => p.slug === (e as CustomEvent<string>).detail);
+      const el = track.current;
+      if (i < 0 || !el) return;
+      el.scrollTo({ left: i * el.clientWidth, behavior: "instant" });
+      setActive(i);
+      document.getElementById("partidos")?.scrollIntoView({ behavior: "smooth" });
+    };
+    window.addEventListener("quevoto:party", onParty);
+    return () => window.removeEventListener("quevoto:party", onParty);
+  }, []);
 
   return (
     <div className="relative h-[100svh] bg-tinta">
@@ -70,6 +83,7 @@ export default function PartyCarousel() {
                     <a href={prog.url} target="_blank" rel="noreferrer" className="text-sm font-bold underline underline-offset-4">
                       Programa en PDF
                     </a>
+                    <span className="w-full text-[11px] font-semibold text-tinta/50">Programa 2023 · por actualizar a 2026</span>
                   </div>
                 )}
               </div>

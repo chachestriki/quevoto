@@ -104,7 +104,7 @@ export default function Chat() {
         aria-label={open ? "Cerrar chat" : "Abrir chat"}
         className={`fixed bottom-4 right-4 z-50 flex items-center gap-2 rounded-full border-[3px] border-tinta bg-rojo px-4 py-3 font-display text-base text-white sm:px-5 sm:py-3.5 sm:text-lg shadow-[4px_4px_0_var(--color-tinta)] transition hover:-translate-y-0.5 sm:bottom-6 sm:right-6 ${open ? "max-sm:hidden" : ""}`}
       >
-        {open ? "✕" : "¿Dudas? Pregunta"}
+        {open ? "✕" : "Haz tu pregunta"}
       </button>
       <div
         className={`fixed z-40 flex flex-col overflow-hidden bg-white transition duration-200 max-sm:inset-0 sm:bottom-24 sm:right-6 sm:h-[min(640px,calc(100svh-8rem))] sm:w-[400px] sm:rounded-[2rem] sm:border-[3px] sm:border-tinta sm:shadow-[8px_8px_0_var(--color-tinta)] ${open ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"}`}

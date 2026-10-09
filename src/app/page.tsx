@@ -1,5 +1,6 @@
 import Chat from "@/components/Chat";
 import PartyCarousel from "@/components/PartyCarousel";
+import PartySearch from "@/components/PartySearch";
 import { Flag, Skyline } from "@/components/Skyline";
 
 const bubbles = [
@@ -22,7 +23,7 @@ export default function Home() {
 
         <nav className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-4 text-crema">
           <span className="font-display text-xl">quevoto?</span>
-          <a href="#partidos" className="text-sm font-bold hover:underline">Partidos →</a>
+          <button data-find-party className="rounded-full border-2 border-crema/70 px-3 py-1.5 text-sm font-bold hover:bg-crema hover:text-rojo">Busca tu partido</button>
         </nav>
 
         <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-5 text-center">
@@ -30,6 +31,9 @@ export default function Home() {
             quevoto?
           </h1>
           <p className="mt-5 text-lg font-bold sm:text-2xl">Los programas, en cristiano.</p>
+          <p className="mt-2 rounded-full bg-tinta/10 px-3 py-1 text-[11px] font-semibold text-tinta/70 sm:text-xs">
+            Programas de 2023 · esperando a que los partidos publiquen los de 2026
+          </p>
           <div className="mt-7 flex flex-wrap justify-center gap-x-3 gap-y-4">
             {bubbles.map((b, i) => (
               <button
@@ -44,6 +48,17 @@ export default function Home() {
             ))}
           </div>
           <p className="mt-5 text-sm font-bold text-tinta/70">Toca una pregunta y te lo cuento</p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button
+              data-find-party
+              className="rounded-full border-[3px] border-tinta bg-tinta px-6 py-3 font-display text-lg text-gualda shadow-[4px_4px_0_var(--color-rojo)] transition hover:-translate-y-0.5"
+            >
+              Busca tu partido
+            </button>
+            <a href="#partidos" className="text-sm font-bold underline underline-offset-4">
+              o míralos todos ↓
+            </a>
+          </div>
         </div>
         <a href="#partidos" className="relative z-10 pb-5 text-center text-sm font-bold text-crema">Desliza ↓</a>
       </section>
@@ -60,6 +75,7 @@ export default function Home() {
         Resúmenes orientativos de los programas de 2023. La IA puede fallar: mira siempre la página original.
       </footer>
 
+      <PartySearch />
       <Chat />
     </main>
   );
