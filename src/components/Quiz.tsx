@@ -64,11 +64,11 @@ export default function Quiz() {
                   <div className="h-full rounded-full" style={{ width: `${r.score}%`, background: p.color }} />
                 </div>
                 <ul className="mt-3 space-y-1 text-[15px] leading-snug">
-                  {r.agree.length > 0 && <li>✅ Pensáis igual en {list(r.agree)}.</li>}
-                  {r.clash.length > 0 && <li>❌ Chocáis en {list(r.clash)}.</li>}
+                  {r.agree.length > 0 && <li><b className="text-green-700">Coincidís</b> en {list(r.agree)}.</li>}
+                  {r.clash.length > 0 && <li><b className="text-rojo">Chocáis</b> en {list(r.clash)}.</li>}
                   {point && (
                     <li className="text-tinta/80">
-                      💬 En {point.label.toLowerCase()} propone: {point.text}
+                      <b>Propone en {point.label.toLowerCase()}:</b> {point.text}
                     </li>
                   )}
                 </ul>
