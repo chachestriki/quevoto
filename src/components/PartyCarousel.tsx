@@ -108,7 +108,7 @@ export default function PartyCarousel() {
         </button>
       </div>
       {active === 0 && (
-        <p className="nudge pointer-events-none absolute right-3 top-1/2 rounded-full bg-tinta px-3 py-1.5 text-sm font-bold text-crema shadow-lg sm:hidden">
+        <p className="nudge pointer-events-none absolute bottom-7 left-4 rounded-full bg-tinta px-3 py-1.5 text-sm font-bold text-crema shadow-lg sm:hidden">
           desliza →
         </p>
       )}
