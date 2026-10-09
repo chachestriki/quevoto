@@ -92,7 +92,7 @@ export async function POST(req: Request) {
   if (!process.env.OPENAI_API_KEY) return rawAnswer("El chat aún no tiene la IA conectada, pero esto es lo que dicen los programas:\n\n");
 
   const firstTurn = messages.filter((m) => m.role === "user").length === 1;
-  const cacheKey = firstTurn ? `${year}:${normalize(question).replace(/[^a-z0-9]+/g, " ").trim()}` : null;
+  const cacheKey = firstTurn ? `v2:${year}:${normalize(question).replace(/[^a-z0-9]+/g, " ").trim()}` : null;
   if (cacheKey) {
     const cached = await cacheGet(cacheKey);
     if (cached) return new Response(cached, { headers });
