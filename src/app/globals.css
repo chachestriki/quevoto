@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-rojo: #c60b1e;
+  --color-gualda: #ffc400;
+  --color-crema: #fff4dc;
+  --color-tinta: #1d1a24;
+  --color-cielo: #8ecae6;
+  --font-sans: var(--font-body);
+  --font-display: var(--font-title);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-crema);
+  color: var(--color-tinta);
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(-6deg) translateY(0); }
+  50% { transform: rotate(4deg) translateY(-8px); }
+}
+
+.wave {
+  animation: wave 4s ease-in-out infinite;
+  transform-origin: left center;
+}
