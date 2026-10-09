@@ -55,8 +55,11 @@ export default function Home() {
             >
               Busca tu partido
             </button>
-            <a href="#partidos" className="text-sm font-bold underline underline-offset-4">
-              o míralos todos ↓
+            <a
+              href="/test"
+              className="rounded-full border-[3px] border-tinta bg-white px-5 py-3 font-display text-lg shadow-[4px_4px_0_var(--color-tinta)] transition hover:-translate-y-0.5"
+            >
+              ¿A quién te pareces?
             </a>
           </div>
         </div>

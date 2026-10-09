@@ -25,6 +25,7 @@ export default function PartyCarousel() {
       document.getElementById("partidos")?.scrollIntoView({ behavior: "smooth" });
     };
     window.addEventListener("quevoto:party", onParty);
+    if (location.hash.startsWith("#p-")) onParty(new CustomEvent("quevoto:party", { detail: location.hash.slice(3) }));
     return () => window.removeEventListener("quevoto:party", onParty);
   }, []);
 
